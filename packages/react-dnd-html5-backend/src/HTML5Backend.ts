@@ -573,7 +573,8 @@ export default class HTML5Backend implements Backend {
 		} else if (this.isDraggingNativeItem()) {
 			// Don't show a nice cursor but still prevent default
 			// "drop and blow away the whole document" action.
-			e.preventDefault()
+			// NO! DOING THAT TELLS THE BROWSER WE CAN HANDLE DROPPING HERE (I.E. ANYWHERE)
+			// e.preventDefault()
 		} else {
 			e.preventDefault()
 			if (e.dataTransfer) {
@@ -584,7 +585,7 @@ export default class HTML5Backend implements Backend {
 
 	private handleTopDragLeaveCapture = (e: DragEvent) => {
 		if (this.isDraggingNativeItem()) {
-			e.preventDefault()
+			// e.preventDefault()
 		}
 
 		const isLastLeave = this.enterLeaveCounter.leave(e.target)
@@ -599,11 +600,14 @@ export default class HTML5Backend implements Backend {
 
 	private handleTopDropCapture = (e: DragEvent) => {
 		this.dropTargetIds = []
-		e.preventDefault()
 
 		if (this.isDraggingNativeItem()) {
-			this.currentNativeSource!.mutateItemByReadingDataTransfer(e.dataTransfer)
+			// NO! IGNORE THESE NATIVE DRAG EVENTS
+			return
+			// this.currentNativeSource!.mutateItemByReadingDataTransfer(e.dataTransfer)
 		}
+
+		e.preventDefault()
 
 		this.enterLeaveCounter.reset()
 	}
